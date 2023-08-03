@@ -1,5 +1,6 @@
 package com.keepcoding.androidsuperpoderes.presentation.login
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,6 +33,13 @@ import androidx.compose.ui.unit.dp
 import com.keepcoding.androidsuperpoderes.R
 import com.keepcoding.androidsuperpoderes.ui.theme.AndroidSuperPoderesTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.testTag
+import com.keepcoding.androidsuperpoderes.FlowExercises
+
+
+const val LOGIN_TEXT_FIELD_USER = "LOGIN_TEXT_FIELD_USER"
+const val LOGIN_TEXT_FIELD_PASSWORD = "LOGIN_TEXT_FIELD_PASSWORD"
+
 
 @Composable
 fun LoginScreen(
@@ -74,12 +82,14 @@ fun LoginFields(
     var password by remember{mutableStateOf("")}
     var passwordVisible by remember{ mutableStateOf(false) }
 
-    TextField(value = email,
+    TextField(modifier = Modifier.testTag(LOGIN_TEXT_FIELD_USER),
+        value = email,
         onValueChange = {email = it},
         label = {Text("Email")},
         leadingIcon = { Icon(imageVector = Icons.Filled.Email, contentDescription = "emailIcon")},
     )
-    TextField(value = password,
+    TextField(modifier = Modifier.testTag(LOGIN_TEXT_FIELD_PASSWORD),
+        value = password,
         onValueChange = {password = it},
         visualTransformation = if(passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         label = { Text("Password")},
@@ -94,7 +104,9 @@ fun LoginFields(
     )
     Spacer(modifier = Modifier.size(20.dp))
     Button(
-        onClick = { onLoginSuccess() },
+        onClick = { if(authenticate(email, password)){
+            onLoginSuccess()
+        } },
         colors = ButtonDefaults.buttonColors(Color(30, 100, 30))
     ){
         Text("Login")
@@ -106,6 +118,9 @@ fun LoginFields(
         Text("Forgot Password")
     }
 }
+
+fun authenticate(user: String, password: String) = true
+    //user == "alextfos@keepcoding.io" && password == "password"
 
 @Preview
 @Composable

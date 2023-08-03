@@ -18,6 +18,8 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
+val baseUrl = "https://dragonball.keepcoding.education/"
+
 val dataModule = module {
 
     single{
@@ -29,7 +31,7 @@ val dataModule = module {
 
     single<Retrofit>{
         Retrofit.Builder()
-            .baseUrl("https://dragonball.keepcoding.education/")
+            .baseUrl(baseUrl)
             .client(get())
             .addConverterFactory(MoshiConverterFactory.create(get()))
             .build()

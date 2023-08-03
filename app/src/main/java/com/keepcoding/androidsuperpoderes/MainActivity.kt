@@ -28,8 +28,13 @@ import androidx.compose.ui.unit.dp
 import com.keepcoding.androidsuperpoderes.navigation.NavigationGraph
 import com.keepcoding.androidsuperpoderes.presentation.login.LoginScreen
 import com.keepcoding.androidsuperpoderes.ui.theme.AndroidSuperPoderesTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
+    val flowExercises = FlowExercises()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -37,6 +42,11 @@ class MainActivity : ComponentActivity() {
                 NavigationGraph()
             }
         }
+        /*GlobalScope.launch {
+            withContext(Dispatchers.IO) {
+                flowExercises.prueba()
+            }
+        }*/
     }
 }
 

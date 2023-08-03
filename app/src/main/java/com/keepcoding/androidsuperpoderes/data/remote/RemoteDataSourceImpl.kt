@@ -8,7 +8,7 @@ class RemoteDataSourceImpl(
 ): RemoteDataSource {
     override suspend fun getHeroList(): List<HeroDTO> = superHeroApi.getHeroList(SearchDto())
 
-    override suspend fun getHero(id: String) = superHeroApi.getHero(SearchDto(name = id))
+    override suspend fun getHero(id: String) = superHeroApi.getHero(SearchDto(name = id)).first()
 
     override suspend fun getLocations(id: String) = superHeroApi.getHeroLocations(SearchDto(id = id))
 }

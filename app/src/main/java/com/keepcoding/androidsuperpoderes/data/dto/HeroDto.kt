@@ -1,7 +1,6 @@
 package com.keepcoding.androidsuperpoderes.data.dto
 
 import com.squareup.moshi.Json
-
 data class HeroDTO (
     @Json(name = "id") val id:String?,
     @Json(name = "name") val name:String?,

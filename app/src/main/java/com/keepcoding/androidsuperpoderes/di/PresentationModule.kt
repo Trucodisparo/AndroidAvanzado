@@ -9,7 +9,7 @@ import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
 val presentationModule = module{
-    viewModel{ HeroListViewModel(get(), get()) }
+    viewModel{ HeroListViewModel(get()) }
     viewModel{ HeroDetailViewModel(get()) }
 
     //viewModelOf(::HeroListViewModel) Apparently not needed? idk

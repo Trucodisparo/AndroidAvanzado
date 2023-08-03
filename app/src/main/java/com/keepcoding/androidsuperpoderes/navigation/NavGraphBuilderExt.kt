@@ -25,10 +25,10 @@ fun NavGraphBuilder.addForgotPassword(navController: NavController){
 }
 
 fun NavGraphBuilder.addHeroList(navController: NavController){
-    composable(Screen.HeroListScreen.route){
-        HeroListScreen{heroId ->
+    composable(Screen.HeroListScreen.route) {
+        HeroListScreen(onItemClick = { heroId ->
             navController.navigate("${Screen.HeroDetailScreen.route}/$heroId")
-        }
+        })
     }
 }
 
@@ -37,6 +37,6 @@ fun NavGraphBuilder.addHeroDetail(navController: NavController){
     arguments = Screen.HeroDetailScreen.arguments){
         navBackStackEntry ->
         val id = navBackStackEntry.arguments?.getString("heroId") ?: ""
-        HeroDetailScreen(id = id)
+        HeroDetailScreen(id = id, onBackClick = {navController.popBackStack()})
     }
 }

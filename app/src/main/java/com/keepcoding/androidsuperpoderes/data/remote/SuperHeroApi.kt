@@ -16,7 +16,7 @@ interface SuperHeroApi {
 
     @POST("api/heros/all")
     @Headers("Authorization: Bearer $TOKEN")
-    suspend fun getHero(@Body searchDto: SearchDto): HeroDTO
+    suspend fun getHero(@Body searchDto: SearchDto): List<HeroDTO>
 
     @POST("api/heros/locations")
     @Headers("Authorization: Bearer $TOKEN")

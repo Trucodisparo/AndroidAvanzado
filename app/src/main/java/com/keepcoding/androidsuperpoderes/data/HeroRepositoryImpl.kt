@@ -8,6 +8,11 @@ import com.keepcoding.androidsuperpoderes.data.mappers.toLocationModel
 import com.keepcoding.androidsuperpoderes.data.remote.RemoteDataSource
 import com.keepcoding.androidsuperpoderes.domain.model.HeroModel
 import com.keepcoding.androidsuperpoderes.domain.model.LocationModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import toHeroLocal
 import toHeroModel
@@ -17,18 +22,19 @@ class HeroRepositoryImpl(
     private val localDataSource: LocalDataSource
 ): HeroRepository {
 
-    override suspend fun getHeroList(filter: Boolean, search: String): List<HeroModel>{
+    override suspend fun getHeroList(filter: Boolean, search: String): Flow<List<HeroModel>>{
         var localData = localDataSource.getHeroList()
         return if(localData.isNotEmpty()){
             if(filter) localData = filterFavorites(localData)
             if(search.isNotBlank()) localData = filterSearch(localData, search)
-            localData.map{it.toHeroModel()}
+            val result = localData.map{it.toHeroModel()}
+            flow{emit(result)}
         }else{
             val remoteData = remoteDataSource.getHeroList().filter{
                 it.id?.isNotEmpty() == true
             }
             localDataSource.insertHeroList(remoteData.map{it.toHeroLocal()})
-            remoteData.map{it.toHeroModel()}
+            flow{emit(remoteData.map{it.toHeroModel()})}
         }
     }
 
@@ -36,13 +42,17 @@ class HeroRepositoryImpl(
         return list.filter{it.favorite }
     }
 
-    override suspend fun getHero(id: String): HeroModel {
+    override suspend fun getHero(id: String): Flow<HeroModel> {
         return try{
-            val heroModel = localDataSource.getHero(id).toHeroModel()
+            val heroModel = localDataSource.getHero(id).map{it.toHeroModel()}
             val location = getLocation(id)
-            return HeroModel(heroModel.id, heroModel.name, heroModel.photoUrl, heroModel.favorite, heroModel.description, location)
+            heroModel.map{
+                HeroModel(it.id, it.name, it.photoUrl, it.favorite, it.description, location)
+            }
         }catch(t: Throwable){
-            remoteDataSource.getHero(id).toHeroModel()
+            flow{
+                emit(remoteDataSource.getHero(id).toHeroModel())
+            }
         }
     }
 
